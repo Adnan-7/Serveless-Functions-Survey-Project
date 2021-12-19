@@ -1,3 +1,5 @@
+const { default: axios } = require('axios');
+
 const title = document.querySelector('.title h2');
 const result = document.querySelector('.result');
 
@@ -36,11 +38,19 @@ result.addEventListener('click', async (e) => {
     const voteNode = result.querySelector(`.vote-${id}`);
     const votes = voteNode.dataset.votes;
     const newVotes = await modifyData(id, votes);
-    voteNode.textContent = `${newVotes} votes`;
-    voteNode.dataset.votes = newVotes;
+    title.textContent = 'Survey';
+    if (newVotes) {
+      voteNode.textContent = `${newVotes} votes`;
+      voteNode.dataset.votes = newVotes;
+    }
   }
 });
 //  modify data
 async function modifyData(id, votes) {
-  return Number(votes) + 1;
+  title.textContent = 'Loading...';
+  try {
+    const { data } = await axios.put('/api/survey', { id, votes });
+  } catch (error) {
+    return null;
+  }
 }
