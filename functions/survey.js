@@ -6,6 +6,8 @@ const airtable = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY })
   .table('survey');
 
 exports.handler = async (event, context, cd) => {
+  const method = event.httpMethod;
+  if(method === "GET"){
   try {
     const { records } = await airtable.list();
     const survey = records.map((item) => {
@@ -24,4 +26,14 @@ exports.handler = async (event, context, cd) => {
       body: 'Server Error',
     };
   }
+}
+
+if(method ==='PUT'){
+
+}
+// default response
+return {
+  statusCode:405;
+  body: "Only GET and PUT Requeats Allowed"
+}
 };
